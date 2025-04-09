@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CineRec </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+      /* Design Variables */
+      :root {
+        --primary-color: #e50914;
+        --secondary-color: #141414;
+        --accent-color: #f5f5f5;
+        --text-primary: #ffffff;
+        --text-secondary: #d2d2d2;
+        --transition-speed: 0.3s;
+        --border-radius: 8px;
+        --max-width: 1200px;
+      }
+
+      /* Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: var(--secondary-color);
+        color: var(--text-primary);
+      }
+
+      .container {
+        width: 90%;
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 2rem 0;
+      }
+
+      /* Navigation Styles */
+      .nav {
+        background-color: rgba(0, 0, 0, 0.95);
+        padding: 1rem 0;
+        position: fixed;
+        width: 100%;
+        z-index: 1000;
+      }
+
+      .nav-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 2rem;
+        color: var(--primary-color);
+        font-weight: bold;
+        text-decoration: none;
+      }
+
+      /* Search Bar Styles */
+      .search-container {
+        margin: 6rem 0 2rem;
+        text-align: center;
+        animation: fadeIn 0.5s ease-in;
+      }
+
+      .search-bar {
+        width: 100%;
+        max-width: 600px;
+        padding: 1rem;
+        border-radius: var(--border-radius);
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        font-size: 1.1rem;
+        transition: all var(--transition-speed);
+      }
+
+      .search-bar:focus {
+        outline: 2px solid var(--primary-color);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      /* Movies Grid */
+      .movies-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 2rem;
+        padding: 2rem 0;
+      }
+
+      .movie-card {
+        background: #181818;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        transition: transform var(--transition-speed);
+        cursor: pointer;
+        position: relative;
+      }
+
+      .movie-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .movie-poster {
+        width: 100%;
+        height: 330px;
+        object-fit: cover;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+      }
+
+      .movie-info {
+        padding: 1rem;
+      }
+
+      .movie-title {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .movie-genres {
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .movies-grid {
+          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+
+        .movie-poster {
+          height: 250px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .search-container {
+          margin-top: 4rem;
+        }
+
+        .movies-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="nav">
+      <div class="container nav-content">
+        <a href="#" class="logo">CineRec</a>
+        <div class="nav-links">
+          <a href="#" class="nav-link">Home</a>
+          <a href="#" class="nav-link">Trending</a>
+          <a href="#" class="nav-link">About</a>
+          <a href="#" class="nav-link">Contact</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <div class="container">
+        <div class="search-container">
+          <input type="text" class="search-bar" placeholder="Search movies..." id="searchInput" />
+        </div>
+
+        <div class="movies-grid" id="moviesGrid">
+          <!-- Movie cards will be dynamically inserted here -->
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Movie Data (Sample)
+      const movies = [{
+          title: "Movie 1",
+          genres: ["Action", "Adventure"],
+          poster: "https://via.placeholder.com/300x450",
+        },
+        // Add more movie objects...
+      ];
+
+      // DOM Elements
+      const moviesGrid = document.getElementById("moviesGrid");
+      const searchInput = document.getElementById("searchInput");
+
+      // Generate Movie Cards
+      function createMovieCard(movie) {
+        const card = document.createElement("div");
+        card.className = "movie-card";
+        card.innerHTML = `
+                <img src="${movie.poster}" alt="${movie.title}" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">${movie.title}</h3>
+                    <p class="movie-genres">${movie.genres.join(", ")}</p>
+                </div>
+            `;
+        card.addEventListener("click", () => showMovieModal(movie));
+        return card;
+      }
+
+      // Render Movies
+      function renderMovies(moviesArray) {
+        moviesGrid.innerHTML = "";
+        moviesArray.forEach((movie) => {
+          moviesGrid.appendChild(createMovieCard(movie));
+        });
+      }
+
+      // Search Functionality
+      function handleSearch() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredMovies = movies.filter(
+          (movie) =>
+          movie.title.toLowerCase().includes(searchTerm) ||
+          movie.genres.some((genre) =>
+            genre.toLowerCase().includes(searchTerm)
+          )
+        );
+        renderMovies(filteredMovies);
+      }
+
+      // Modal Functionality (Base Implementation)
+      function showMovieModal(movie) {
+        // Implement modal display logic
+        console.log("Showing modal for:", movie.title);
+      }
+
+      // Event Listeners
+      searchInput.addEventListener("input", handleSearch);
+
+      // Initial Render
+      renderMovies(movies);
+    </script>
+  </body>
+
+</html>

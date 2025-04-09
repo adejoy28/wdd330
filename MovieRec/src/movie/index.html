@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MovieRec </title>
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
+        <!-- Stylesheets -->
+        <link rel="stylesheet" href="../css/style.css">
+        <style>
+            /* Reset and Base Styles 
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Arial', sans-serif;
+            }
+
+            body {
+                background: #0f0f0f;
+                color: #ffffff;
+            }*/
+
+            /* Animations */
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Header Styles */
+            .movie-header {
+                position: relative;
+                height: 80vh;
+                background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                    url('https://image.tmdb.org/t/p/w1280/8eifdha9GQeZAkexgtD45546XKx.jpg');
+                background-size: cover;
+                background-position: center;
+                padding: 2rem;
+                animation: fadeIn 1s ease-out;
+            }
+
+            .header-content {
+                max-width: 1200px;
+                margin: 0 auto;
+                display: flex;
+                gap: 2rem;
+                align-items: center;
+                height: 100%;
+            }
+
+            .movie-poster {
+                flex-shrink: 0;
+                width: 300px;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+                transition: transform 0.3s ease;
+            }
+
+            .movie-poster:hover {
+                transform: scale(1.05);
+            }
+
+            .movie-poster img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            .movie-info {
+                flex-grow: 1;
+            }
+
+            .movie-title {
+                font-size: 3rem;
+                margin-bottom: 0.5rem;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+
+            .tagline {
+                font-style: italic;
+                color: #cccccc;
+                margin-bottom: 1rem;
+            }
+
+            .metadata {
+                display: flex;
+                gap: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .metadata-item {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .rating {
+                color: #ffd700;
+                font-weight: bold;
+            }
+
+            .status {
+                background: #4CAF50;
+                padding: 0.3rem 0.8rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+            }
+
+            /* Main Content Styles */
+            .container {
+                max-width: 1200px;
+                margin: 2rem auto;
+                padding: 0 2rem;
+                animation: fadeIn 1s ease-out 0.2s;
+            }
+
+            .section {
+                background: #1a1a1a;
+                border-radius: 10px;
+                padding: 2rem;
+                margin-bottom: 2rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+                color: #e62429;
+                border-bottom: 2px solid #e62429;
+                padding-bottom: 0.5rem;
+            }
+
+            .overview {
+                line-height: 1.6;
+                margin-bottom: 1.5rem;
+                font-size: 1.1rem;
+            }
+
+            /* Details Grid */
+            .details-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 2rem;
+                margin-top: 1.5rem;
+            }
+
+            .detail-item h3 {
+                color: #e62429;
+                margin-bottom: 0.5rem;
+                font-size: 1.1rem;
+            }
+
+            .genre-list,
+            .language-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                list-style: none;
+            }
+
+            .genre,
+            .language {
+                background: #2a2a2a;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+            }
+
+            .production-company {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .company-logo {
+                max-height: 40px;
+                max-width: 100px;
+                object-fit: contain;
+            }
+
+            /* Trailer Section */
+            .trailer-section {
+                margin-top: 2rem;
+            }
+
+            .trailer-container {
+                position: relative;
+                padding-bottom: 56.25%;
+                height: 0;
+                overflow: hidden;
+                border-radius: 10px;
+                margin-top: 1.5rem;
+            }
+
+            .trailer-iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .header-content {
+                    flex-direction: column;
+                    text-align: center;
+                }
+
+                .movie-poster {
+                    width: 200px;
+                }
+
+                .movie-title {
+                    font-size: 2rem;
+                }
+
+                .metadata {
+                    flex-wrap: wrap;
+                    justify-content: center;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .movie-header {
+                    height: auto;
+                    padding: 2rem 1rem;
+                }
+
+                .container {
+                    padding: 0 1rem;
+                }
+            }
+        </style>
+
+
+        <!-- Scripts -->
+        <script type="module" src="../js/movie.js"></script>
+    </head>
+
+    <body>
+        <header class="divider" id="main-header"></header>
+
+        <!-- 
+            This section represents the header of a movie details page. 
+            It includes the following elements:
+            
+            - A container with the class "movie-header" that wraps the entire header content.
+            - A "movie-poster" div displaying the movie's poster image.
+            - A "movie-info" div containing:
+                - The movie title displayed as an <h1> element.
+                - A tagline describing the movie.
+                - Metadata about the movie, including:
+                    - Rating (e.g., ⭐ 6.1)
+                    - Duration (e.g., ⌛ 1h 59m)
+                    - Release date (e.g., 📅 February 12, 2025)
+                    - Status (e.g., Released)
+                - Two external links:
+                    - A link to the movie's IMDb page.
+                    - A link to the official Marvel website for the movie.
+            - The links open in a new tab due to the `target="_blank"` attribute.
+        -->
+        <section class="movie-header"></section>
+
+        <main class="container">
+            <section class="section"></section>
+
+            <!-- Trailer Section (Would be populated if trailer link exists) -->
+            <!-- <section class="section trailer-section">
+            <h2 class="section-title">Official Trailer</h2>
+            <div class="trailer-container">
+                <iframe class="trailer-iframe" src="YOUTUBE_EMBED_LINK" allowfullscreen></iframe>
+            </div>
+        </section> -->
+        </main>
+
+        <script>
+            // You would typically fetch this data from an API
+            const movieData = {
+                // ... (provided JSON data)
+            };
+
+
+            // Populate data dynamically
+            document.addEventListener('DOMContentLoaded', () => {
+                // Header
+                document.querySelector('.rating').textContent = `⭐ ${movieData.vote_average.toFixed(1)}`;
+                document.querySelector('.status').textContent = movieData.status;
+                document.querySelector('.overview').textContent = movieData.overview;
+
+                // Metadata
+                document.querySelector('[title="Runtime"]').textContent = formatRuntime(movieData.runtime);
+                document.querySelector('[title="Release Date"]').textContent = formatDate(movieData
+                    .release_date);
+
+
+
+
+                // Financials
+                document.querySelector('[title="Budget"]').textContent = formatCurrency(movieData.budget);
+                document.querySelector('[title="Revenue"]').textContent = formatCurrency(movieData.revenue);
+
+
+
+
+                // Languages
+                const languageList = document.querySelector('.language-list');
+                movieData.spoken_languages.forEach(lang => {
+                    const li = document.createElement('li');
+                    li.className = 'language';
+                    li.textContent = lang.name;
+                    languageList.appendChild(li);
+                });
+
+                // Add trailer section if available
+                if (movieData.trailer_link) {
+                    const trailerSection = document.createElement('section');
+                    trailerSection.className = 'section trailer-section';
+                    trailerSection.innerHTML = `
+                    <h2 class="section-title">Official Trailer</h2>
+                    <div class="trailer-container">
+                        <iframe class="trailer-iframe" src="${movieData.trailer_link}" allowfullscreen></iframe>
+                    </div>
+                `;
+                    document.querySelector('main').appendChild(trailerSection);
+                }
+            });
+        </script>
+        <footer id="main-footer"></footer>
+
+
+    </body>
+
+</html>

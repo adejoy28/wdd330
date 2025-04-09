@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <!-- Previous head content remains the same -->
+        <style>
+            /* Add pagination styles */
+            .pagination {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 1rem;
+                padding: 2rem 5%;
+                animation: fadeIn 0.5s ease;
+            }
+
+            .pagination-btn {
+                background: #e50914;
+                color: white;
+                border: none;
+                padding: 0.5rem 1.5rem;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .pagination-btn:hover:not(:disabled) {
+                background: #b20710;
+                transform: scale(1.05);
+            }
+
+            .pagination-btn:disabled {
+                background: #5a5a5a;
+                cursor: not-allowed;
+                opacity: 0.7;
+            }
+
+            .page-indicator {
+                font-size: 1.1rem;
+                min-width: 120px;
+                text-align: center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- Previous header and search section remain the same -->
+
+        <div class="loading">Loading movies...</div>
+        <main class="movies-grid" id="moviesGrid"></main>
+        <div class="pagination">
+            <button id="prevPage" class="pagination-btn" disabled>‹ Previous</button>
+            <span id="currentPage" class="page-indicator">Page 1</span>
+            <button id="nextPage" class="pagination-btn" disabled>Next ›</button>
+        </div>
+
+        <script>
+            // State management
+            let currentPage = 1;
+            let totalPages = 1;
+            let isSearching = false;
+            let currentSearchTerm = '';
+
+            // Modified fetchMovies function with pagination
+            async function fetchPopularMovies(page = 1) {
+                try {
+                    document.querySelector('.loading').style.display = 'block';
+                    const response = await fetch(
+                        `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=${page}`
+                    );
+                    const data = await response.json();
+                    totalPages = data.total_pages;
+                    currentPage = page;
+                    displayMovies(data.results);
+                    updatePaginationControls();
+                } catch (error) {
+                    console.error('Error fetching movies:', error);
+                } finally {
+                    document.querySelector('.loading').style.display = 'none';
+                }
+            }
+
+            // New search movies function
+            async function fetchSearchMovies(searchTerm, page = 1) {
+                try {
+                    document.querySelector('.loading').style.display = 'block';
+                    const response = await fetch(
+                        `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(searchTerm)}&page=${page}`
+                    );
+                    const data = await response.json();
+                    totalPages = data.total_pages;
+                    currentPage = page;
+                    displayMovies(data.results);
+                    updatePaginationControls();
+                } catch (error) {
+                    console.error('Search error:', error);
+                } finally {
+                    document.querySelector('.loading').style.display = 'none';
+                }
+            }
+
+            // Update pagination controls
+            function updatePaginationControls() {
+                const prevButton = document.getElementById('prevPage');
+                const nextButton = document.getElementById('nextPage');
+                const currentPageSpan = document.getElementById('currentPage');
+
+                currentPageSpan.textContent = `Page ${currentPage} of ${totalPages}`;
+                prevButton.disabled = currentPage === 1;
+                nextButton.disabled = currentPage === totalPages;
+            }
+
+            // Modified search input handler
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(async () => {
+                    const searchTerm = e.target.value.trim();
+                    if (searchTerm.length > 2) {
+                        currentSearchTerm = searchTerm;
+                        isSearching = true;
+                        fetchSearchMovies(searchTerm, 1);
+                    } else if (searchTerm.length === 0) {
+                        isSearching = false;
+                        fetchPopularMovies(1);
+                    }
+                }, 500);
+            });
+
+            // Pagination button handlers
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    const newPage = currentPage - 1;
+                    isSearching ?
+                        fetchSearchMovies(currentSearchTerm, newPage) :
+                        fetchPopularMovies(newPage);
+                }
+            });
+
+            document.getElementById('nextPage').addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    const newPage = currentPage + 1;
+                    isSearching ?
+                        fetchSearchMovies(currentSearchTerm, newPage) :
+                        fetchPopularMovies(newPage);
+                }
+            });
+
+            // Modified movie card click handler
+            function displayMovies(movies) {
+                const grid = document.getElementById('moviesGrid');
+                grid.innerHTML = movies.map(movie => `
+                <div class="movie-card" data-movie-id="${movie.id}">
+                    <img src="${IMAGE_BASE_URL}${movie.poster_path}" 
+                         class="movie-poster"
+                         alt="${movie.title}"
+                         onerror="this.src='https://via.placeholder.com/300x450?text=Poster+Not+Available'">
+                    <div class="movie-info">
+                        <h3 class="movie-title">${movie.title}</h3>
+                        <p class="movie-rating">⭐ ${movie.vote_average}/10</p>
+                    </div>
+                </div>
+            `).join('');
+
+                // Add click handlers with proper movie ID
+                document.querySelectorAll('.movie-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const movieId = card.dataset.movieId;
+                        window.open(`https://www.themoviedb.org/movie/${movieId}`, '_blank');
+                    });
+                });
+            }
+
+            // Initialize with first page
+            fetchPopularMovies(1);
+        </script>
+    </body>
+
+</html>

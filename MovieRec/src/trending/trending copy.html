@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script type="module" src="../js/fetchMovies.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+  <div class="navbar__container">
+    <div class="flex-between">
+      <div class="flex items-center">
+        <div class="navbar__logo">MovieRec</div>
+        <div class="navbar__desktop-menu">
+          <a href="/" class="nav-link nav-link--active">Home</a>
+          <a href="/genres" class="nav-link nav-link--inactive">Genres</a>
+          <!-- Other nav links -->
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <button class="theme-toggle">🌙</button>
+        <button class="menu-toggle-button md:hidden">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="navbar__mobile-menu">
+    <a href="/" class="mobile-nav-link">Home</a>
+    <!-- Other mobile nav links -->
+  </div>
+</nav>
+    <div id="moviesGrid"></div>
+
+</body>
+</html>

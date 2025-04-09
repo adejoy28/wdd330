@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" class="dark">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CineSuggest </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="../css/app.css" />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            animation: {
+              "fade-in": "fadeIn 0.5s ease-in-out",
+              float: "float 3s ease-in-out infinite",
+              "pulse-slow": "pulse 6s infinite",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": {
+                  opacity: "0"
+                },
+                "100%": {
+                  opacity: "1"
+                },
+              },
+              float: {
+                "0%, 100%": {
+                  transform: "translateY(0)"
+                },
+                "50%": {
+                  transform: "translateY(-10px)"
+                },
+              },
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+
+  <body class="dark:bg-gray-900 bg-gray-50 dark:text-white text-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="dark:bg-gray-800 bg-white bg-opacity-90 backdrop-blur-md fixed w-full z-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Placeholder for existing navigation content -->
+
+          <div class="flex items-center gap-4">
+            <button id="theme-toggle" aria-label="Toggle dark mode"
+              class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+              🌙
+            </button>
+            <!-- Placeholder for existing desktop navigation items -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="md:hidden hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <a href="/" class="block px-3 py-2 rounded-md text-base font-medium dark:bg-gray-900 bg-gray-100">Home</a>
+          <a href="/genres"
+            class="block px-3 py-2 rounded-md text-base font-medium dark:text-gray-300 text-gray-700 hover:dark:bg-gray-700 hover:bg-gray-200">Genres</a>
+          <a href="/trending"
+            class="block px-3 py-2 rounded-md text-base font-medium dark:text-gray-300 text-gray-700 hover:dark:bg-gray-700 hover:bg-gray-200">Trending</a>
+          <a href="/my-list"
+            class="block px-3 py-2 rounded-md text-base font-medium dark:text-gray-300 text-gray-700 hover:dark:bg-gray-700 hover:bg-gray-200">My
+            List</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Placeholder for existing main content -->
+
+    <!-- Footer -->
+    <footer class="dark:bg-gray-800 bg-gray-100 bg-opacity-90 backdrop-blur-md py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="dark:text-white text-gray-900 font-semibold mb-4">
+              CineSuggest
+            </h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="/about"
+                  class="dark:text-gray-400 text-gray-600 hover:dark:text-white hover:text-gray-900">About Us</a>
+              </li>
+              <li>
+                <a href="/careers"
+                  class="dark:text-gray-400 text-gray-600 hover:dark:text-white hover:text-gray-900">Careers</a>
+              </li>
+              <li>
+                <a href="/press"
+                  class="dark:text-gray-400 text-gray-600 hover:dark:text-white hover:text-gray-900">Press</a>
+              </li>
+            </ul>
+          </div>
+          <!-- Placeholder for additional footer links -->
+        </div>
+        <div
+          class="mt-12 pt-8 border-t dark:border-gray-700 border-gray-200 text-center dark:text-gray-400 text-gray-600 text-sm">
+          <p>© 2023 CineSuggest. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+
+</html>

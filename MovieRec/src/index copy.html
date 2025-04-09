@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MovieRec </title>
+    <script type="module" src="js/main.js"></script>
+    <!-- <script src="https://cdn.tailwindcss.com" defer></script> -->
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            animation: {
+              "fade-in": "fadeIn 0.5s ease-in-out",
+              float: "float 3s ease-in-out infinite",
+              "pulse-slow": "pulse 6s infinite",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": {
+                  opacity: "0"
+                },
+                "100%": {
+                  opacity: "1"
+                },
+              },
+              float: {
+                "0%, 100%": {
+                  transform: "translateY(0)"
+                },
+                "50%": {
+                  transform: "translateY(-10px)"
+                },
+              },
+            },
+          },
+        },
+      };
+    </script> -->
+  </head>
+
+  <body class="bg-gray-900 text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-gray-800 bg-opacity-90 backdrop-blur-md fixed w-full z-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <span
+                class="text-2xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent animate-pulse-slow">MovieRec</span>
+            </div>
+            <div class="hidden md:block">
+              <div class="ml-10 flex items-baseline space-x-4">
+                <a href="/" class="px-3 py-2 rounded-md text-sm font-medium bg-gray-900 text-white">Home</a>
+                <a href="/genres"
+                  class="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Genres</a>
+                <a href="/trending"
+                  class="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Trending</a>
+                <a href="my-list"
+                  class="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">My
+                  List</a>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <button id="theme-toggle" aria-label="Toggle dark mode"
+              class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+              🌙
+            </button>
+            <div class="-mr-2 flex md:hidden">
+              <button id="mobile-menu-btn" type="button"
+                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                <span class="sr-only">Open main menu</span>
+                <i class="fas fa-bars h-6 w-6"></i>
+              </button>
+            </div>
+            <!-- Placeholder for existing desktop navigation items -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="md:hidden hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <a href="/" class="block px-3 py-2 rounded-md text-base font-medium dark:bg-gray-900 bg-gray-100">Home</a>
+          <a href="/genres"
+            class="block px-3 py-2 rounded-md text-base font-medium dark:text-gray-300 text-gray-700 hover:dark:bg-gray-700 hover:bg-gray-200">Genres</a>
+          <a href="/trending"
+            class="block px-3 py-2 rounded-md text-base font-medium dark:text-gray-300 text-gray-700 hover:dark:bg-gray-700 hover:bg-gray-200">Trending</a>
+          <a href="/my-list"
+            class="block px-3 py-2 rounded-md text-base font-medium dark:text-gray-300 text-gray-700 hover:dark:bg-gray-700 hover:bg-gray-200">My
+            List</a>
+        </div>
+      </div>
+      <!-- <div class="hidden md:block">
+            <div class="ml-4 flex items-center md:ml-6">
+              <button
+                class="p-1 rounded-full text-gray-400 hover:text-white focus:outline-none"
+              >
+                <span class="sr-only">Notifications</span>
+                <i class="fas fa-bell h-6 w-6"></i>
+              </button> -->
+      <!-- <div class="ml-3 relative">
+                <div>
+                  <button class="max-w-xs flex items-center text-sm rounded-full focus:outline-none">
+                    <img class="h-8 w-8 rounded-full"
+                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      alt="" />
+                  </button>
+                </div>
+              </div> -->
+      <!-- </div> -->
+      <!-- </div> -->
+      </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <!-- Hero Section with Search -->
+      <section class="text-center mb-16 animate-fade-in">
+        <h1
+          class="text-4xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
+          Discover Your Next Favorite Movie
+        </h1>
+        <p class="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+          Personalized recommendations based on your taste. Search or browse our
+          curated collections.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="max-w-2xl mx-auto relative">
+          <div class="relative">
+            <input type="text" placeholder="Search for movies, actors, or genres..."
+              class="w-full py-4 px-6 rounded-full bg-gray-800 border border-gray-700 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-400 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-pink-500/10" />
+            <button
+              class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-2 rounded-full hover:shadow-lg hover:shadow-pink-500/30 transition-all duration-300">
+              <i class="fas fa-search w-5 h-5"></i>
+            </button>
+          </div>
+          <div class="mt-2 text-left text-sm text-gray-400 px-6">
+            Try: "Sci-fi classics", "Tom Hanks movies", or "90s comedies"
+          </div>
+        </div>
+      </section>
+
+
+      <!-- Featured Movies -->
+      <section class="mb-16">
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-2xl md:text-3xl font-bold">
+            <span class="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+              Featured Movies
+            </span>
+            <span class="text-gray-400 ml-2">Curated for You</span>
+          </h2>
+          <a href="#" class="text-pink-400 hover:text-pink-300 flex items-center transition-all">
+            View All <i class="fas fa-chevron-right ml-1 text-sm"></i>
+          </a>
+        </div>
+
+        <!-- Movies Grid -->
+        <div id="moviesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+      </section>
+
+      <!-- Call to Action -->
+      <section
+        class="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-2xl p-8 md:p-12 mb-16 backdrop-blur-sm border border-gray-800">
+        <div class="max-w-3xl mx-auto text-center">
+          <h2 class="text-2xl md:text-4xl font-bold mb-4">
+            Get Personalized Recommendations
+          </h2>
+          <p class="text-gray-300 mb-6">
+            Tell us what you like and we'll find the perfect movies for you. Our
+            algorithm learns your preferences over time to deliver better
+            suggestions.
+          </p>
+          <button
+            class="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-8 rounded-full hover:shadow-lg hover:shadow-pink-500/30 transition-all duration-300 transform hover:scale-105">
+            Start Your Movie Journey
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 bg-opacity-90 backdrop-blur-md py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="text-white font-semibold mb-4">MovieRec</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">About Us</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Careers</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Press</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold mb-4">Legal</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Terms of Use</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Cookie Policy</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold mb-4">Support</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Help Center</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Contact Us</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Feedback</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold mb-4">Connect</h3>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="fab fa-twitter text-xl"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="fab fa-facebook text-xl"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="fab fa-instagram text-xl"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <i class="fab fa-youtube text-xl"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="mt-12 pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
+          <p>© 2023 MovieRec. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+
+</html>
