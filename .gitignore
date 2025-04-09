@@ -128,3 +128,9 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+.gitignore
+.gitignore
+week02/scripts/script.js
+week02/data/latter-day-prophets.json
+"Development Documents"/*
