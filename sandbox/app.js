@@ -92,8 +92,8 @@ class Professor extends Person {
 }
 
 const walsh = new Professor("Walsh", "Psychology");
-walsh.introduceSelf();
-walsh.grade("my paper");
+// walsh.introduceSelf();
+// walsh.grade("my paper");
 
 
 //  ENCAPSULATION: This is the process of keeping an object's internal state private,
@@ -121,5 +121,27 @@ class Student extends Person {
 
 const john = new Student("John", 1);
 
-john.introduceSelf();
-alert(john.canStudyArchery());
+// john.introduceSelf();
+// alert(john.canStudyArchery());
+
+
+console.log(document.defaultView);
+
+window.resizeTo(300, 12);
+
+// console.log(window.open("https://google.com"));
+
+
+window.locationbar.visible = false;
+console.log(window.scrollbars);
+
+// window.fetch('https://www.google.com')
+
+// const p = window.prompt("Is this what you want? ");
+
+window.resizeBy(3000, 11)
+
+// console.log(p);
+
+console.log(window.top)
+ham

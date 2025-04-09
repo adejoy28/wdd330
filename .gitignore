@@ -131,6 +131,12 @@ dist
 
 .gitignore
 .gitignore
-week02/scripts/script.js
+week02/
 week02/data/latter-day-prophets.json
-"Development Documents"/*
+DevelopmentDocuments
+
+
+sandbox/
+TravelPlanner/
+week03/
+week04
