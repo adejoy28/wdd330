@@ -1,0 +1,4 @@
+[build]
+base = "/MovieRec"
+publish = "dist"
+command = "npm run build"
