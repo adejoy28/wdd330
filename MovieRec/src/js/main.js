@@ -1,35 +1,19 @@
 // import loadAlerts from "./alert.mjs";
-import TailwindUtils, { cardTemplate } from "./utils.mjs";
+import { cardTemplate, loadHeaderFooter } from "./utils.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 
-// tailwindConfig();
-// loadHeaderFooter();
+loadHeaderFooter();
 
-// loadAlerts();
-
-const tailwiindcss = new TailwindUtils();
-
-// Event listeners
-document.addEventListener("DOMContentLoaded", () => {
-    tailwiindcss.initTheme();
-    // initTheme();
-    document
-        .getElementById("theme-toggle")
-        .addEventListener("click", tailwiindcss.toggleDarkMode);
-    document
-        .querySelector('#mobile-menu-btn')
-        .addEventListener("click", tailwiindcss.toggleMobileMenu);
-});
-
+const ex = new ExternalServices();
 
 async function loadMovies() {
-    const moviesGrid = document.querySelector('.grid');
-
     try {
-        const url = '../json/movies.json';
-        const response = await fetch(url);
-        const data = await response.json();
+        const url = 'https://api.themoviedb.org/3/movie/top_rated';
 
-        cardTemplate(data.movies, document.querySelector("#moviesGrid"));
+        const data = await ex.fetchApi(url);
+        console.log(data);
+
+        cardTemplate(data.results, document.querySelector("#moviesGrid"));
     } catch (error) {
         console.error('Error loading movies:', error);
     }

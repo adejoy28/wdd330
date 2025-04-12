@@ -15,7 +15,7 @@
 
 
     <!-- Scripts -->
-    <script type="module" src="./js/trending.js"></script>
+    <script type="module" src="./js/main.js"></script>
   </head>
 
   <body>
@@ -24,7 +24,7 @@
     <!-- Main Content -->
     <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <!-- Hero Section with Search -->
-      <section class="text-center mb-16 animate-fade-in">
+      <section class="hero">
         <h1
           class="text-4xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent">
           Discover Your Next Favorite Movie
@@ -33,65 +33,62 @@
           Personalized recommendations based on your taste. Search or browse our
           curated collections.
         </p>
+        <div class="loading"></div>
 
         <!-- Search Bar -->
-        <div class="max-w-2xl mx-auto relative">
-          <div class="relative">
-            <input type="text" placeholder="Search for movies, actors, or genres..."
-              class="w-full py-4 px-6 rounded-full bg-gray-800 border border-gray-700 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white placeholder-gray-400 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-pink-500/10" />
-            <button
-              class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-2 rounded-full hover:shadow-lg hover:shadow-pink-500/30 transition-all duration-300">
-              <i class="fas fa-search w-5 h-5"></i>
-            </button>
+        <section class="search-section">
+          <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search for movies, actors, or genres...">
+            <i class="fas fa-search search-icon" id="search-icon"></i>
           </div>
           <div class="mt-2 text-left text-sm text-gray-400 px-6">
             Try: "Sci-fi classics", "Tom Hanks movies", or "90s comedies"
           </div>
+        </section>
+
         </div>
       </section>
 
 
       <!-- Featured Movies -->
-      <section class="mb-16">
-        <div class="flex justify-between items-center mb-8">
-          <h2 class="text-2xl md:text-3xl font-bold">
-            <span class="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+      <section class="featured-movies mb-16">
+        <div class="featured-header mb-8">
+          <h2 class="featured-title">
+            <span class="gradient-text">
               Featured Movies
             </span>
-            <span class="text-gray-400 ml-2">Curated for You</span>
+            <span class="subtitle">Curated for You</span>
           </h2>
-          <a href="#" class="text-pink-400 hover:text-pink-300 flex items-center transition-all">
+          <a href="#" class="view-all-link">
             View All <i class="fas fa-chevron-right ml-1 text-sm"></i>
           </a>
         </div>
+      </section>
 
-        <!-- Movies Grid -->
-        <div id="moviesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+      <style>
+        /* Mobile-first styles */
+      </style>
+
+      <!-- Movies Grid -->
+      <div id="moviesGrid" class="movies-grid">
+      </div>
       </section>
 
       <!-- Call to Action -->
-      <section
-        class="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-2xl p-8 md:p-12 mb-16 backdrop-blur-sm border border-gray-800">
-        <div class="max-w-3xl mx-auto text-center">
-          <h2 class="text-2xl md:text-4xl font-bold mb-4">
-            Get Personalized Recommendations
-          </h2>
-          <p class="text-gray-300 mb-6">
+      <section class="cta-section">
+        <div class="cta-content">
+          <h2>Get Personalized Recommendations</h2>
+          <p>
             Tell us what you like and we'll find the perfect movies for you. Our
             algorithm learns your preferences over time to deliver better
             suggestions.
           </p>
-          <button
-            class="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-8 rounded-full hover:shadow-lg hover:shadow-pink-500/30 transition-all duration-300 transform hover:scale-105">
+          <button class="cta-button">
             Start Your Movie Journey
           </button>
         </div>
       </section>
     </main>
-
-    <div class="loading"></div>
-
-    <main class="movies-grid" id="moviesGrid"></main>
 
     <footer id="main-footer"></footer>
 

@@ -2,6 +2,7 @@
   .navbar__container {
     padding: 0 1.5rem;
   }
+
 }
 
 
@@ -15,5 +16,23 @@
   .navbar__desktop-menu {
     display: flex;
     gap: 1rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .movies-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+
+  footer {
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
   }
 }

@@ -16,19 +16,24 @@ async function convertToJson(res) {
 
 export default class ExternalServices {
   #key = API_KEY;
+  #options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${this.#key}`
+    }
+  }
 
   async getData(id) {
-    const options = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${this.#key}`
-      }
-    }
-
-    const response = await fetch(`${baseURL}movie/${id}`, options);
+    const response = await fetch(`${baseURL}movie/${id}`, this.#options);
     const data = await convertToJson(response);
     console.log(data);
+    return data;
+  }
+
+  async fetchApi(url) {
+    const response = await fetch(url, this.#options);
+    const data = await response.json();
     return data;
   }
 
