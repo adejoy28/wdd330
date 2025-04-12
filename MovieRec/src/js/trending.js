@@ -1,7 +1,10 @@
-import { cardTemplate, loadHeaderFooter } from "./utils.mjs";
+import { toggleMenu, cardTemplate, loadHeaderFooter } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
-loadHeaderFooter();
+
+await loadHeaderFooter();
+toggleMenu();
+
 
 const extServe = new ExternalServices();
 
@@ -9,7 +12,7 @@ const extServe = new ExternalServices();
 
 // API Configuration
 // const API_URL = 'https://api.themoviedb.org/3/';
-const API_URL = 'https://api.themoviedb.org/3/trending/all/';
+const API_URL = 'https://api.themoviedb.org/3/';
 // const API_URL = 'https://api.themoviedb.org/3/search/multi?query=';
 const API_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4ODAyZjgxMTk4OTA0ZTE1N2NmZDk2NTcwNWMxMjcyYyIsIm5iZiI6MTc0MTYxMTgyNS4yNzUsInN1YiI6IjY3Y2VlMzMxZDk1ZTQxMWRkMDJhN2I0MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.nAJy1raaizDJybMAbnEaLOsqZwmk7Lu3mUiy4JDacyE';
 
@@ -73,27 +76,6 @@ function displayMovies(movies) {
 
 // Search Functionality
 const searchInput = document.querySelector('.search-input');
-let searchTimeout;
-
-searchInput.addEventListener('input', (e) => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(async () => {
-        const searchTerm = e.target.value;
-        if (searchTerm.length > 2) {
-            try {
-                const response = await fetch(
-                    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${searchTerm}`
-                );
-                const data = await response.json();
-                displayMovies(data.results);
-            } catch (error) {
-                console.error('Search error:', error);
-            }
-        } else if (searchTerm.length === 0) {
-            fetchMovies();
-        }
-    }, 500);
-});
 
 // Initialize
 fetchTrendingMovies();

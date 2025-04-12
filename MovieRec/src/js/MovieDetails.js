@@ -11,7 +11,7 @@ export default class MovieDetails {
         this.movie = {};
     }
     async init() {
-        this.movie = await this.datasource.getData(this.movieId);
+        this.movie = await this.datasource.getData(`movie/${this.movieId}`);
         // console.log(this.movie);
         this.renderMovieHeader('.movie-header');
         this.renderMovieContent('.section');
@@ -27,13 +27,13 @@ export default class MovieDetails {
         sectionMovieHeader.style.backgroundPosition = "center";
 
         const divHeader = `
-        <div class="header-content">
+        <div class="header-content ">
                     <div class="movie-poster">
                         <img src="${IMAGE_BASE_URL + this.movie.poster_path}" alt="Movie Poster">
                     </div>
                     <div class="movie-info">
                         <h1 class="movie-title">${this.movie.original_title}</h1>
-                        <p class="tagline">${this.movie.tagline}.</p>
+                        <p class="tagline">${this.movie.tagline}</p>
                         <div class="metadata">
                             <span class="metadata-item rating">⭐ ${this.movie.vote_average.toFixed(1)}</span>
                             <span class="metadata-item">⌛ ${formatRuntime(this.movie.runtime)}</span>

@@ -16,6 +16,7 @@ async function convertToJson(res) {
 
 export default class ExternalServices {
   #key = API_KEY;
+  #BASE_URL = baseURL;
   #options = {
     method: 'GET',
     headers: {
@@ -24,8 +25,8 @@ export default class ExternalServices {
     }
   }
 
-  async getData(id) {
-    const response = await fetch(`${baseURL}movie/${id}`, this.#options);
+  async getData(url) {
+    const response = await fetch(`${this.#BASE_URL + url}`, this.#options);
     const data = await convertToJson(response);
     console.log(data);
     return data;

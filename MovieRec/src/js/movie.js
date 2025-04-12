@@ -1,9 +1,9 @@
-import { loadHeaderFooter, getParam } from "./utils.mjs";
+import { loadHeaderFooter, getParam, } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 import MovieDetails from "./MovieDetails";
 
 
-loadHeaderFooter();
+await loadHeaderFooter();
 
 
 const movieId = getParam('id');
