@@ -1,39 +1,18 @@
 // Mobile menu toggle and dark mode functionality
-export default class DarkMode {
-    constructor() {
-        // Bind the toggleDarkMode method to the current instance
-        this.toggleDarkMode = this.toggleDarkMode.bind(this);
-    }
+// Theme configuration
+const switchTheme = () => {
 
-    // Toggles dark mode on and off
-    toggleDarkMode() {
-        const html = document.documentElement; // Get the root HTML element
-        html.classList.toggle("dark"); // Toggle the "dark" class
-        const isDark = html.classList.contains("dark"); // Check if dark mode is active
-        localStorage.setItem("theme", isDark ? "dark" : "light"); // Save the theme preference in localStorage
-        this.updateThemeButton(isDark); // Update the theme toggle button
-    }
+    // Get root Element and data-theme value
+    const rootElem = document.documentElement;
+    const themeIcon = document.querySelector('#theme-toggle');
+    let dataTheme = rootElem.getAttribute('data-theme'),
+        newTheme;
 
-    // Updates the theme toggle button's appearance and accessibility attributes
-    updateThemeButton(isDark) {
-        const themeBtn = document.getElementById("theme-toggle"); // Get the theme toggle button
-        themeBtn.innerHTML = isDark ? "🌞" : "🌙"; // Set the button icon
-        themeBtn.setAttribute(
-            "aria-label",
-            isDark ? "Switch to light mode" : "Switch to dark mode" // Update the aria-label for accessibility
-        );
-    }
+    newTheme = (dataTheme === 'dark') ? 'light' : 'dark';
 
-    // Initializes the theme based on saved preference or default to dark mode
-    initTheme() {
-        const savedTheme = localStorage.getItem("theme") || "dark"; // Get saved theme or default to "dark"
-        document.documentElement.classList.toggle(
-            "dark",
-            savedTheme === "dark" // Apply the saved theme
-        );
-        this.updateThemeButton(savedTheme === "dark"); // Update the theme toggle button
-    }
-}
+    // Set the new H
+    rootElem.setAttribute('data-theme', newTheme);
+};
 
 // Toggles the mobile menu visibility
 function toggleMenu() {
@@ -42,8 +21,7 @@ function toggleMenu() {
 
     console.log("menuBtn:", menuBtn); // Debugging: Log the menu button element
     menuBtn.addEventListener('click', () => {
-        console.log("I'm clicked!"); // Debugging: Log when the button is clicked
-        menuLinks.classList.toggle("hidden"); // Toggle the "hidden" class on the navigation links
+        menuLinks.classList.toggle("open"); // Toggle the "hidden" class on the navigation links
         menuBtn.classList.toggle('open'); // Toggle the "open" class on the menu button
     });
 }
@@ -84,6 +62,12 @@ export async function loadHeaderFooter() {
     renderWithTemplate(footerPartial, footerElement); // Render the footer template
 
     toggleMenu(); // Initialize the mobile menu toggle functionality
+
+    const themeToggleBtn = document.querySelector('#theme-toggle');
+    themeToggleBtn.addEventListener('click', () => {
+        switchTheme();
+        themeToggleBtn.classList.toggle('open');
+    });
 }
 
 // Generates and renders movie cards based on the provided data
@@ -103,7 +87,7 @@ export function cardTemplate(data, selector) {
     </div>`).join(''); // Map the data to HTML and join it into a single string
 }
 
-// Utility function to format currency
+// To format currency
 export const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -112,14 +96,14 @@ export const formatCurrency = (amount) => {
     }).format(amount); // Format the amount as USD currency
 };
 
-// Utility function to format runtime in hours and minutes
+// To format runtime in hours and minutes
 export const formatRuntime = (minutes) => {
     const hours = Math.floor(minutes / 60); // Calculate hours
     const remainingMinutes = minutes % 60; // Calculate remaining minutes
     return `${hours}h ${remainingMinutes}m`; // Return formatted runtime
 };
 
-// Utility function to format a date string
+// To format a date string
 export const formatDate = (dateString) => {
     const options = {
         year: 'numeric',

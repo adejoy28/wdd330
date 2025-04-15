@@ -29,7 +29,6 @@ async function searchFunction(searchInput) {
             const searchTerm = e.target.value;
             if (searchTerm.length > 2) {
                 try {
-
                     const response = await ex.getData(`search/multi?query=${searchTerm}&include_adult=false&language=en-US`);
                     console.log(response.results);
                     if (response.results && Array.isArray(response.results)) {
@@ -42,12 +41,41 @@ async function searchFunction(searchInput) {
                     console.error('Search error:', error);
                 }
             } else if (searchTerm.length === 0) {
-                loadMovies();
+                // loadMovie/s();
             }
         }, 500);
     });
 
 }
+
+
+
+async function surpriseMe() {
+    try {
+        const data = await ex.getData('/trending/movie/day');
+
+        const totalPages = Math.min(data.total_pages);
+        const randomPage = Math.floor(Math.random() * totalPages) + 1;
+
+        // Fetch Random Page from the API
+        const fetchRandomPage = await ex.getData(`/trending/movie/day?page=${randomPage}`);
+        const randMoviesFromRandomPage = fetchRandomPage.results;
+
+        if (!randMoviesFromRandomPage.length)
+            throw new Error('No movies Found');
+
+        const randomMovieIndex = Math.floor(Math.random() * randMoviesFromRandomPage.length);
+        const randomMovie = randMoviesFromRandomPage[randomMovieIndex];
+
+        console.log(randomMovie);
+
+        window.location.href = `/movie/?id=${randomMovie.id}`;
+
+    } catch (error) {
+        console.error('Error loading movies:', error);
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     loadMovies();
@@ -56,4 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     searchFunction(searchInput);
 
+    const surpriseMeBtn = document.querySelector('.cta-button');
+    surpriseMeBtn.addEventListener('click', surpriseMe);
+    // surpriseMe(); // Initialises "Surpise Me!" button
 });

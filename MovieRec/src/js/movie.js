@@ -3,7 +3,7 @@ import ExternalServices from "./ExternalServices.mjs";
 import MovieDetails from "./MovieDetails";
 
 
-await loadHeaderFooter();
+loadHeaderFooter();
 
 
 const movieId = getParam('id');
