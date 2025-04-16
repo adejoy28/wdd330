@@ -1,7 +1,6 @@
 // Mobile menu toggle and dark mode functionality
 // Theme configuration
 const switchTheme = () => {
-
     // Get root Element and data-theme value
     const rootElem = document.documentElement;
     const themeIcon = document.querySelector('#theme-toggle');
@@ -10,20 +9,48 @@ const switchTheme = () => {
 
     newTheme = (dataTheme === 'dark') ? 'light' : 'dark';
 
-    // Set the new H
     rootElem.setAttribute('data-theme', newTheme);
 };
 
 // Toggles the mobile menu visibility
 function toggleMenu() {
-    const menuBtn = document.querySelector("#menu-toggle"); // Get the menu toggle button
     const menuLinks = document.querySelector('.nav-links'); // Get the navigation links container
+    const menuBtn = document.querySelector("#menu-toggle"); // Get the menu toggle button
 
-    console.log("menuBtn:", menuBtn); // Debugging: Log the menu button element
     menuBtn.addEventListener('click', () => {
         menuLinks.classList.toggle("open"); // Toggle the "hidden" class on the navigation links
         menuBtn.classList.toggle('open'); // Toggle the "open" class on the menu button
     });
+}
+
+function wayFinderImplementation() {
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    const pageName = document.querySelector('#main-header').getAttribute('data-pageName');
+    const urlPath = window.location.pathname.replace(/\/$/, '').split('/').filter(Boolean);
+    // const currentPath = window.location.pathname.replace(/\/$/, '').split('#')[0];
+    const currentPath = urlPath[0] || '';
+    console.log(currentPath);
+    navLinks.forEach(navLink => {
+        navLink.classList.remove('active');
+        if (pageName.toLowerCase() === navLink.textContent.trim().toLowerCase()) {
+            navLink.classList.add('active');
+        }
+    });
+
+    console.log(`You are on the ${pageName} page`);
+    // Add any specific logic for the index page here
+
+    // navLinks.forEach(navLink => {
+    //     navLink.addEventListener('click', (e) => {
+    //         e.preventDefault();
+    //         moodButtons.forEach(btn => btn.classList.remove('active'));
+    //         button.classList.add('active');
+    //         console.log(navLink);
+    //     })
+    // });
+
+
 }
 
 // Base URL for movie images
@@ -68,6 +95,7 @@ export async function loadHeaderFooter() {
         switchTheme();
         themeToggleBtn.classList.toggle('open');
     });
+    wayFinderImplementation();
 }
 
 // Generates and renders movie cards based on the provided data
@@ -113,3 +141,39 @@ export const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', options); // Format the date
 };
 
+
+export function pagination(cP, tP, cST) {
+    // State management
+    let currentPage = cP || 1;
+    let totalPages = tP || 1;
+    let isSearching = false;
+    let currentSearchTerm = cST || '';
+
+    const prevButton = document.getElementById('prevPage');
+    const nextButton = document.getElementById('nextPage');
+    const currentPageSpan = document.getElementById('currentPage');
+
+    currentPageSpan.textContent = `Page ${currentPage} of ${totalPages}`;
+    prevButton.disabled = currentPage === 1;
+    nextButton.disabled = currentPage === totalPages;
+
+    // Pagination button handlers
+    document.getElementById('prevPage').addEventListener('click', () => {
+        if (currentPage > 1) {
+            const newPage = currentPage - 1;
+            isSearching ?
+                fetchSearchMovies(currentSearchTerm, newPage) :
+                fetchPopularMovies(newPage);
+        }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            const newPage = currentPage + 1;
+            isSearching ?
+                fetchSearchMovies(currentSearchTerm, newPage) :
+                fetchPopularMovies(newPage);
+        }
+    });
+
+}

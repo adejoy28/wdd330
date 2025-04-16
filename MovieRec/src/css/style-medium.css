@@ -247,27 +247,5 @@
     justify-content: space-between;
     align-items: center;
   }
-}
 
-/* Responsive Design */
-@media (min-width: 768px) {}
-
-@media (min-width: 768px) {
-  .cta-content h2 {
-    font-size: 2rem;
-  }
-}
-
-/* Responsive Design */
-@media (max-width: 480px) {
-  .search-section {
-    margin-top: 80px;
-  }
-}
-
-/* Responsive styles for larger screens */
-@media (min-width: 768px) {
-  .featured-title {
-    font-size: 1.875rem;
-  }
 }

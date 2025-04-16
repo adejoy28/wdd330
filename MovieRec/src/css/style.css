@@ -562,6 +562,41 @@ nav {
     transform: scale(1.05);
 }
 
+/* Mood Filters */
+.mood-filters {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+    justify-content: center;
+}
+
+.mood-btn {
+    background: #2a2a2a;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 0.8rem 1.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mood-btn i {
+    font-size: 1.1rem;
+}
+
+.mood-btn:hover,
+.mood-btn.active {
+    background: #e62429;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(230, 36, 41, 0.3);
+}
+
 /* Animations */
 @keyframes fadeIn {
     from {

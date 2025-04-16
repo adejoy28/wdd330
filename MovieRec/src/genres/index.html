@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MovieRec</title>
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
+        <!-- Stylesheets -->
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../css/style-medium.css">
+
+
+        <!-- Scripts -->
+        <script type="module" src="../js/genre.js"></script>
+    </head>
+
+    <body>
+        <header class="divider" id="main-header" data-pageName="genres"></header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Mood Filters -->
+            <section class="section" id="moodFilters">
+                <h2 class="section-title">I'm in the mood for...</h2>
+                <div class="mood-filters">
+                    <button class="mood-btn active"><i class="fas fa-star"></i> All</button>
+                    <button class="mood-btn"><i class="fas fa-explosion"></i> Action</button>
+                    <button class="mood-btn"><i class="fas fa-laugh-squint"></i> Comedy</button>
+                    <button class="mood-btn"><i class="fas fa-theater-masks"></i> Drama</button>
+                    <button class="mood-btn"><i class="fas fa-surprise"></i> Thriller</button>
+                    <button class="mood-btn"><i class="fas fa-heart"></i> Romance</button>
+                    <button class="mood-btn"><i class="fas fa-robot"></i> Sci-Fi</button>
+                    <button class="mood-btn"><i class="fas fa-ghost"></i> Horror</button>
+                    <button class="mood-btn"><i class="fas fa-child"></i> Family</button>
+                </div>
+            </section>
+
+            <!-- Movies Grid -->
+            <div class="loading"></div>
+            <div id="moviesGrid" class="movies-grid">
+            </div>
+        </main>
+
+        <footer id="main-footer"></footer>
+
+    </body>
+
+</html>
