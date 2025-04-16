@@ -3,16 +3,16 @@ import ExternalServices from "./ExternalServices.mjs";
 
 loadHeaderFooter();
 
+
 const extServe = new ExternalServices();
 
 const moodButtons = document.querySelectorAll('.mood-btn');
 
 async function fetchTrendingMovies() {
     try {
-        // alert(options);
         document.querySelector('.loading').style.display = 'block';
 
-        const data = await extServe.getData('trending/movie/week?language=en-US');
+        const data = await extServe.getData('trending/movie/week?language=en-US&sort_by=popularity.desc');
         cardTemplate(data.results, document.getElementById('moviesGrid')); // Display movies
         // pagination(data.pages)
     } catch (error) {
@@ -25,21 +25,24 @@ async function fetchTrendingMovies() {
 
 // Mood filter functionality
 moodButtons.forEach(button => {
-    button.addEventListener('click', () => {
+    button.addEventListener('click', async () => {
         moodButtons.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
 
         // Get the selected mood
-        const mood = button.textContent.trim().replace(/^[^\w]+/, '');
+        const mood = button.getAttribute('data-genreid'); // Default to 'All' if attribute is missing
 
         // Filter movies (in a real app, this would call an API)
-        if (mood === 'All') {
-            fetchTrendingMovies();
+        if (mood === 'all') {
+            await fetchTrendingMovies();
         } else {
-            const filteredMovies = fetchTrendingMovies.filter(movie => movie.genre === mood);
-            cp
-            // renderFilteredMovies(filteredMovies);
-            cardTemplate(filteredMovies, document.getElementById('moviesGrid')); // Display movies
+            let url = 'https://api.themoviedb.org/3/'
+            const data = await extServe.getData(`discover/movie?include_adult=false&include_video=false&&with_genres=${mood}&language=en-US&page=1&sort_by=popularity.desc`);
+            console.log(data.results);
+            // const filteredMovies = data.results.filter(movie => movie.genre_ids.includes(parseInt(mood)));
+            // console.log(filteredMovies);
+
+            cardTemplate(data.results, document.getElementById('moviesGrid')); // Display movies
         }
     });
 });
