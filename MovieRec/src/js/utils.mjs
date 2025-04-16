@@ -1,5 +1,4 @@
-// Mobile menu toggle and dark mode functionality
-// Theme configuration
+// Theme configuration for Dark Mode functionality
 const switchTheme = () => {
     // Get root Element and data-theme value
     const rootElem = document.documentElement;
@@ -23,6 +22,7 @@ function toggleMenu() {
     });
 }
 
+// Implements wayfinding in the navigation
 function wayFinderImplementation() {
     const navLinks = document.querySelectorAll('.nav-link');
 
@@ -141,7 +141,7 @@ export const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', options); // Format the date
 };
 
-
+// To paginate web pages with more content pages
 export function pagination(cP, tP, cST) {
     // State management
     let currentPage = cP || 1;

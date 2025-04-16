@@ -1,7 +1,7 @@
 // const appendedURL = "https://api.themoviedb.org/3/";
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
-import { formatDate, formatRuntime, formatCurrency } from "./utils.mjs";
+import { formatDate, formatRuntime, formatCurrency, cardTemplate } from "./utils.mjs";
 
 
 export default class MovieDetails {
@@ -9,12 +9,15 @@ export default class MovieDetails {
         this.movieId = movieId;
         this.datasource = datasource;
         this.movie = {};
+        this.movieRecom = '';
     }
     async init() {
         this.movie = await this.datasource.getData(`movie/${this.movieId}`);
+        this.movieRecom = await this.datasource.getData(`movie/${this.movieId}/recommendations`)
         // console.log(this.movie);
         this.renderMovieHeader('.movie-header');
         this.renderMovieContent('.section');
+        await this.renderRecommendations('.recommendation');
     }
 
     renderMovieHeader(selector) {
@@ -119,5 +122,13 @@ export default class MovieDetails {
         // </section > -->
     }
 
+    async renderRecommendations(selector) {
+        const selectorSection = document.querySelector(selector);
+        // console.log(selectorSection);
+        if (this.movieRecom && this.movieRecom.results.length > 0) {
+            const limitedResults = this.movieRecom.results.slice(0, 5);
+            cardTemplate(limitedResults, selectorSection);
+        }
+    }
 }
 

@@ -23,3 +23,5 @@ async function fetchTrendingMovies() {
 
 // Initialize
 fetchTrendingMovies();
+
+// Pagination will come later

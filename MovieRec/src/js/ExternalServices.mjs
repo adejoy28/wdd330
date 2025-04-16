@@ -28,7 +28,6 @@ export default class ExternalServices {
   async getData(url) {
     const response = await fetch(`${this.#BASE_URL + url}`, this.#options);
     const data = await convertToJson(response);
-    // console.log(data);
     return data;
   }
 
