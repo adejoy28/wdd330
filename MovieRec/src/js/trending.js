@@ -21,6 +21,34 @@ async function fetchTrendingMovies() {
     }
 }
 
+async function searchFunction(searchInput) {
+    let searchTimeout;
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(async () => {
+            const searchTerm = e.target.value;
+            if (searchTerm.length > 2) {
+                try {
+                    const response = await ex.getData(`search/multi?query=${searchTerm}&include_adult=false&language=en-US`);
+                    console.log(response.results);
+                    if (response.results && Array.isArray(response.results)) {
+                        cardTemplate(response.results, document.querySelector("#moviesGrid"));
+                    } else {
+                        console.log("No results found for the search term.");
+                    }
+
+                } catch (error) {
+                    console.error('Search error:', error);
+                }
+            } else if (searchTerm.length === 0) {
+                // loadMovie/s();
+            }
+        }, 500);
+    });
+
+}
+
+
 // Initialize
 fetchTrendingMovies();
 

@@ -106,7 +106,7 @@ nav {
 }
 
 .logo:hover {
-    transform: scale(1.05);
+    transform: scale(1);
 }
 
 .nav-links {
@@ -506,12 +506,13 @@ nav {
     border: none;
 }
 
-/* Movies Grid */
+/* ================================================ */
+/* Recommendation sections */
+/* ================================================ */
+
 .recommendation {
     display: flex;
-    overflow-x: scroll;
-    flex-basis: 1;
-    /* grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); */
+    overflow-x: auto;
     gap: 1rem;
     padding: 1rem 3%;
     animation: slideUp 0.5s ease-out;
@@ -608,6 +609,46 @@ nav {
     box-shadow: 0 4px 6px rgba(236, 72, 153, 0.3);
     transform: scale(1.05);
 }
+
+/* Pagination */
+/* Add pagination styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem 5%;
+    animation: fadeIn 0.5s ease;
+}
+
+.pagination-btn {
+    background: #e50914;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #b20710;
+    transform: scale(1.05);
+}
+
+.pagination-btn:disabled {
+    background: #5a5a5a;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.page-indicator {
+    font-size: 1.1rem;
+    min-width: 120px;
+    text-align: center;
+}
+
+
 
 /* Mood Filters */
 .mood-filters {
