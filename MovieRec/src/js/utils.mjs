@@ -30,7 +30,7 @@ function wayFinderImplementation() {
     const urlPath = window.location.pathname.replace(/\/$/, '').split('/').filter(Boolean);
     // const currentPath = window.location.pathname.replace(/\/$/, '').split('#')[0];
     const currentPath = urlPath[0] || '';
-    console.log(currentPath);
+    // console.log(currentPath);
     navLinks.forEach(navLink => {
         navLink.classList.remove('active');
         if (pageName.toLowerCase() === navLink.textContent.trim().toLowerCase()) {
@@ -38,7 +38,7 @@ function wayFinderImplementation() {
         }
     });
 
-    console.log(`You are on the ${pageName} page`);
+    // console.log(`You are on the ${pageName} page`);
     // Add any specific logic for the index page here
 
     // navLinks.forEach(navLink => {
@@ -61,6 +61,22 @@ export function getParam(param) {
     const queryString = window.location.search; // Get the query string from the URL
     const urlParams = new URLSearchParams(queryString); // Parse the query string
     return urlParams.get(param); // Return the value of the specified parameter
+}
+
+// retrieve data from localstorage
+export function getLocalStorage(key) {
+    try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : null;
+    } catch (error) {
+        console.error('Error parsing local storage data:', error);
+        return null;
+    }
+}
+
+// save data to local storage
+export function setLocalStorage(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
 }
 
 // Renders a template into a parent element and optionally executes a callback
@@ -96,6 +112,70 @@ export async function loadHeaderFooter() {
         themeToggleBtn.classList.toggle('open');
     });
     wayFinderImplementation();
+
+
+    // data-movieDetails
+}
+
+// Respond to the favBtns to add movies to the localStorage
+export async function addToFavList() {
+    const favBtns = document.querySelectorAll('.fav-btn');
+    console.log(favBtns);
+    favBtns.forEach(favBtn => {
+        favBtn.addEventListener('click', (e) => {
+            // alert(2);
+            // e.preventDefault();
+            // addToFavList(favBtn);
+            const j = favBtn.getAttribute('data-movieDetails');
+            // if (getLocalStorage('favoriteMovies') >= 0) {
+            const favs = getLocalStorage('favoriteMovies') || [];
+            console.log(favs);
+            if (!favs.includes(j)) {
+                favs.push(j);
+                console.log(favs);
+                showNotification('Movies added to Favourites')
+            } else {
+                showNotification('Movies already added to Favourites')
+            }
+            setLocalStorage('favoriteMovies', favs);
+        });
+    });
+}
+
+
+// Generates and renders movie cards based on the provided data
+export function cardTemplateRev(data, selector) {
+    // console.log(typeof data);
+    selector.innerHTML = data.forEach(movie => {
+
+    });
+
+    selector.innerHTML = data.map((movie) => {
+        const parsedMovie = typeof movie === 'string' ? JSON.parse(movie) : movie;
+        return `<div class="movie-card">
+            <a href="/movie/?id=${parsedMovie.id}">
+                <img src="${IMAGE_BASE_URL}${parsedMovie.poster_path}"
+                alt="${parsedMovie.title ? parsedMovie.title : parsedMovie.name}"
+                    class="movie-poster"
+                    onerror="this.src='https://placehold.co/300x450?text=${parsedMovie.title ? parsedMovie.title : parsedMovie.name}'">
+                <div class="movie-info">
+                    <h3 class="movie-title">${parsedMovie.title ? parsedMovie.title : parsedMovie.name}</h3>
+                    <p class="movie-rating">⭐ ${parsedMovie.vote_average === undefined ? "" : parsedMovie.vote_average.toFixed(1)}</p>
+                </div>
+            </a>
+            <button id="remFavBtn"
+                class="fav-btn" data-movieDetails='${JSON.stringify(movie).replaceAll(/'/g, '&#39;')}'>
+                <i class="fas fa-minus text-white text-sm"></i>
+            </button>
+        </div>`;
+    }).join(''); // Map the data to HTML and join it into a single string
+}
+
+export function showNotification(message) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.classList.add('show');
+    setTimeout(() => notification.classList.remove('show'), 3000);
 }
 
 // Generates and renders movie cards based on the provided data
@@ -106,12 +186,16 @@ export function cardTemplate(data, selector) {
             <img src="${IMAGE_BASE_URL}${movie.poster_path}"
                 alt="${movie.title ? movie.title : movie.name}"
                 class="movie-poster"
-                onerror="this.src='https://placehold.co/300x450?text=Poster+Not+Available'">
+                onerror="this.src='https://placehold.co/300x450?text=${movie.title ? movie.title : movie.name}'">
             <div class="movie-info">
                 <h3 class="movie-title">${movie.title ? movie.title : movie.name}</h3>
                 <p class="movie-rating">⭐ ${movie.vote_average === undefined ? "" : movie.vote_average.toFixed(1)}</p>
             </div>
         </a>
+        <button id="favBtn"
+            class="fav-btn" data-movieDetails='${JSON.stringify(movie)}'>
+            <i class="fas fa-plus text-white text-sm"></i>
+        </button>
     </div>`).join(''); // Map the data to HTML and join it into a single string
 }
 

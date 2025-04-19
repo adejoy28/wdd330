@@ -13,6 +13,7 @@ export default defineConfig({
                 about: resolve(__dirname, "src/about.html"),
                 contact: resolve(__dirname, "src/about.html"),
                 genre: resolve(__dirname, "src/genres/index.html"),
+                favorites: resolve(__dirname, "src/favorites/index.html"),
 
 
                 // checkout: resolve(__dirname, "src/checkout/index.html"),

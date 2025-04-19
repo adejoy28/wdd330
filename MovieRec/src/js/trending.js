@@ -1,4 +1,4 @@
-import { cardTemplate, loadHeaderFooter } from "./utils.mjs";
+import { cardTemplate, loadHeaderFooter, addToFavList } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 loadHeaderFooter();
@@ -14,6 +14,7 @@ async function fetchTrendingMovies() {
 
         const data = await extServe.getData('trending/movie/day?language=en-US');
         cardTemplate(data.results, document.getElementById('moviesGrid')); // Display movies
+        await addToFavList();
     } catch (error) {
         console.error('Error fetching movies:', error);
     } finally {
@@ -30,7 +31,7 @@ async function searchFunction(searchInput) {
             if (searchTerm.length > 2) {
                 try {
                     const response = await ex.getData(`search/multi?query=${searchTerm}&include_adult=false&language=en-US`);
-                    console.log(response.results);
+                    // console.log(response.results);
                     if (response.results && Array.isArray(response.results)) {
                         cardTemplate(response.results, document.querySelector("#moviesGrid"));
                     } else {
