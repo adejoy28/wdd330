@@ -19,141 +19,71 @@
 
         <!-- Additional Styles for Favorites Page -->
         <style>
-            /* Add custom animations */
-            /* @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
+            .empty-state {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 2rem;
+                color: var(--text-color);
+            }
+
+            .empty-state i {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+                color: var(--accent-color);
+            }
+
+            .empty-state h2 {
+                margin-bottom: 0.5rem;
+            }
+
+            .loading {
+                display: none;
+                text-align: center;
+                padding: 2rem;
+                color: var(--text-color);
+            }
+
+            .loading i {
+                font-size: 2rem;
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
                 }
 
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
+                100% {
+                    transform: rotate(360deg);
                 }
             }
-
-            .movie-card {
-                animation: fadeInUp 0.5s ease forwards;
-                opacity: 0;
-            }
-
-            .remove-btn {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                background-color: rgba(0, 0, 0, 0.7);
-                border: none;
-                color: white;
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-
-            .remove-btn:hover {
-                background-color: #e50914;
-                transform: scale(1.1);
-            }
-
-            .notification {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background-color: #e50914;
-                color: white;
-                padding: 15px 25px;
-                border-radius: 5px;
-                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-                transform: translateY(100px);
-                opacity: 0;
-                transition: transform 0.3s ease, opacity 0.3s ease;
-                z-index: 1000;
-            }
-
-            .notification.show {
-                transform: translateY(0);
-                opacity: 1;
-            } */
         </style>
     </head>
 
     <body>
         <header class="divider" id="main-header" data-pageName="favorites"></header>
 
-        <main class="movies-grid" id="moviesGrid">
-            <div class="empty-state" id="emptyState" style="display: none;">
+        <main>
+            <div class="loading">
+                <i class="fas fa-spinner"></i>
+                <p>Loading your favorite movies...</p>
+            </div>
+
+            <div class="empty-state" id="emptyState">
                 <i class="fas fa-heart-broken"></i>
                 <h2>No favorites yet</h2>
                 <p>Start adding movies to your favorites collection</p>
             </div>
+
+            <div class="movies-grid" id="moviesGrid"></div>
         </main>
 
         <div id="notification" class="notification"></div>
 
         <footer id="main-footer"></footer>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const moviesGrid = document.getElementById('moviesGrid');
-                const emptyState = document.getElementById('emptyState');
-                const notification = document.getElementById('notification');
-
-                let favorites = JSON.parse(localStorage.getItem('favoriteMovies')) || [];
-
-                function renderFavorites() {
-                    moviesGrid.innerHTML = '';
-
-                    if (favorites.length === 0) {
-                        emptyState.style.display = 'flex';
-                        return;
-                    }
-
-                    emptyState.style.display = 'none';
-
-                    favorites.forEach((movie, index) => {
-                        const movieCard = document.createElement('div');
-                        movieCard.className = 'movie-card';
-                        movieCard.style.animationDelay = `${index * 0.1}s`;
-                        movieCard.innerHTML = `
-                            <img src="${movie.poster}" alt="${movie.title}">
-                            <div class="movie-info">
-                                <h3>${movie.title}</h3>
-                                <p>${movie.year}</p>
-                                <button class="remove-btn" data-id="${movie.id}">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        `;
-                        moviesGrid.appendChild(movieCard);
-                    });
-                }
-
-                function showNotification(message) {
-                    notification.textContent = message;
-                    notification.classList.add('show');
-                    setTimeout(() => notification.classList.remove('show'), 3000);
-                }
-
-                function removeFromFavorites(movieId) {
-                    favorites = favorites.filter(movie => movie.id !== movieId);
-                    localStorage.setItem('movieFavorites', JSON.stringify(favorites));
-                    renderFavorites();
-                    showNotification('Movie removed from favorites');
-                }
-
-                // Event delegation for remove buttons
-                moviesGrid.addEventListener('click', (e) => {
-                    if (e.target.closest('.remove-btn')) {
-                        const movieId = e.target.closest('.remove-btn').dataset.id;
-                        removeFromFavorites(movieId);
-                    }
-                });
-
-                // Initial render
-                // renderFavorites();
-            });
-        </script>
     </body>
 
 </html>

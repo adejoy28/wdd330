@@ -1,25 +1,105 @@
-import { cardTemplateRev, loadHeaderFooter, getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { cardTemplate, loadHeaderFooter, getLocalStorage, setLocalStorage, showNotification } from "./utils.mjs";
 
 loadHeaderFooter();
 
-
-// Fetch Popular Movies
+// Fetch Favorite Movies
 async function renderFavoriteMovies() {
-    try {
-        // alert(options);
-        // document.querySelector('.loading').style.display = 'block';
+    const loadingElement = document.querySelector('.loading');
+    const emptyStateElement = document.getElementById('emptyState');
+    const moviesGridElement = document.getElementById('moviesGrid');
 
+    if (loadingElement) {
+        loadingElement.style.display = 'block';
+    }
+
+    try {
         const favMovies = getLocalStorage('favoriteMovies');
 
-        console.log(favMovies);
-        // const data = await extServe.getData('trending/movie/day?language=en-US');
-        cardTemplateRev(favMovies, document.getElementById('moviesGrid')); // Display movies
-        // await addToFavList();
+        if (!favMovies || !Array.isArray(favMovies) || favMovies.length === 0) {
+            showNotification('No favorite movies found');
+            if (emptyStateElement) {
+                emptyStateElement.style.display = 'flex';
+            }
+            if (moviesGridElement) {
+                moviesGridElement.innerHTML = '';
+            }
+            return;
+        }
+
+        if (emptyStateElement) {
+            emptyStateElement.style.display = 'none';
+        }
+
+        // Parse the stored movie data
+        const parsedMovies = favMovies.map(movie => {
+            try {
+                return typeof movie === 'string' ? JSON.parse(movie) : movie;
+            } catch (error) {
+                console.error('Error parsing movie data:', error);
+                return null;
+            }
+        }).filter(movie => movie !== null);
+
+        if (parsedMovies.length === 0) {
+            showNotification('Error loading favorite movies');
+            if (emptyStateElement) {
+                emptyStateElement.style.display = 'flex';
+            }
+            if (moviesGridElement) {
+                moviesGridElement.innerHTML = '';
+            }
+            return;
+        }
+
+        cardTemplate(parsedMovies, moviesGridElement);
+        setupRemoveButtons();
     } catch (error) {
         console.error('Error fetching movies:', error);
+        showNotification('Error loading favorite movies');
+        if (emptyStateElement) {
+            emptyStateElement.style.display = 'flex';
+        }
+        if (moviesGridElement) {
+            moviesGridElement.innerHTML = '';
+        }
     } finally {
-        // document.querySelector('.loading').style.display = 'none';
+        if (loadingElement) {
+            loadingElement.style.display = 'none';
+        }
     }
+}
+
+function setupRemoveButtons() {
+    const moviesGrid = document.getElementById('moviesGrid');
+    if (!moviesGrid) return;
+
+    moviesGrid.addEventListener('click', (e) => {
+        const favBtn = e.target.closest('.fav-btn');
+        if (!favBtn) return;
+
+        const movieData = favBtn.getAttribute('data-movieDetails');
+        if (!movieData) return;
+
+        try {
+            const movie = JSON.parse(movieData);
+            const favMovies = getLocalStorage('favoriteMovies') || [];
+            const updatedFavs = favMovies.filter(m => {
+                try {
+                    const parsedM = typeof m === 'string' ? JSON.parse(m) : m;
+                    return parsedM.id !== movie.id;
+                } catch {
+                    return true;
+                }
+            });
+
+            setLocalStorage('favoriteMovies', updatedFavs);
+            showNotification('Movie removed from favorites');
+            renderFavoriteMovies();
+        } catch (error) {
+            console.error('Error removing movie from favorites:', error);
+            showNotification('Error removing movie from favorites');
+        }
+    });
 }
 
 renderFavoriteMovies();

@@ -1,30 +1,29 @@
 // import loadAlerts from "./alert.mjs";
-import { cardTemplate, loadHeaderFooter, pagination, addToFavList } from "./utils.mjs";
+import { appendParams, cardTemplate, loadHeaderFooter, addToFavList, Pagination } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 
 const ex = new ExternalServices();
+const baseUrl = 'https://api.themoviedb.org/3/movie/top_rated';
 
-async function loadMovies() {
+async function loadMovies(page = 1) {
     try {
-        // const url = 'https://api.themoviedb.org/3/movie/top_rated';
-        const baseUrl = 'https://api.themoviedb.org/3/movie/top_rated';
-        const appendParams = (url, params) => {
-            const queryString = new URLSearchParams(params).toString();
-            return `${url}?${queryString}`;
-        };
-
-        const url = appendParams(baseUrl, { language: 'en-US', page: 1 });
-
+        const url = appendParams(baseUrl, { language: 'en-US', page });
         const data = await ex.fetchApi(url);
-        console.log(data.results);
+
+        if (!data || !data.results) {
+            throw new Error('Invalid data received from API');
+        }
+
+        const pagination = new Pagination(data.page, data.total_pages, null, (newPage) => loadMovies(newPage));
+        pagination.init();
 
         cardTemplate(data.results, document.querySelector("#moviesGrid"));
         addToFavList();
-        // pagination(data.page, data.total_pages);
 
     } catch (error) {
         console.error('Error loading movies:', error);
+        showNotification('Failed to load movies. Please try again later.');
     }
 }
 
@@ -32,27 +31,32 @@ async function loadMovies() {
 
 async function searchFunction(searchInput) {
     let searchTimeout;
+    const DEBOUNCE_DELAY = 500; // Configurable debounce delay
+
     searchInput.addEventListener('input', (e) => {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(async () => {
-            const searchTerm = e.target.value;
+            const searchTerm = e.target.value.trim();
             if (searchTerm.length > 2) {
                 try {
                     const response = await ex.getData(`search/multi?query=${searchTerm}&include_adult=false&language=en-US`);
-                    console.log(response.results);
                     if (response.results && Array.isArray(response.results)) {
-                        cardTemplate(response.results, document.querySelector("#moviesGrid"));
+                        if (response.results.length === 0) {
+                            showNotification('No results found for your search.');
+                        } else {
+                            cardTemplate(response.results, document.querySelector("#moviesGrid"));
+                        }
                     } else {
-                        console.log("No results found for the search term.");
+                        showNotification('No results found for your search.');
                     }
-
                 } catch (error) {
                     console.error('Search error:', error);
+                    showNotification('Search failed. Please try again.');
                 }
             } else if (searchTerm.length === 0) {
-                // loadMovie/s();
+                loadMovies();
             }
-        }, 500);
+        }, DEBOUNCE_DELAY);
     });
 
 }
@@ -88,7 +92,7 @@ async function surpriseMe() {
 
 document.addEventListener('DOMContentLoaded', () => {
     loadHeaderFooter();
-    loadMovies();
+    loadMovies(1);
 
     const searchInput = document.querySelector('.search-input');
 

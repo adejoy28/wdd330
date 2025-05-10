@@ -25,32 +25,16 @@ function toggleMenu() {
 // Implements wayfinding in the navigation
 function wayFinderImplementation() {
     const navLinks = document.querySelectorAll('.nav-link');
-
     const pageName = document.querySelector('#main-header').getAttribute('data-pageName');
     const urlPath = window.location.pathname.replace(/\/$/, '').split('/').filter(Boolean);
-    // const currentPath = window.location.pathname.replace(/\/$/, '').split('#')[0];
     const currentPath = urlPath[0] || '';
-    // console.log(currentPath);
+
     navLinks.forEach(navLink => {
         navLink.classList.remove('active');
         if (pageName.toLowerCase() === navLink.textContent.trim().toLowerCase()) {
             navLink.classList.add('active');
         }
     });
-
-    // console.log(`You are on the ${pageName} page`);
-    // Add any specific logic for the index page here
-
-    // navLinks.forEach(navLink => {
-    //     navLink.addEventListener('click', (e) => {
-    //         e.preventDefault();
-    //         moodButtons.forEach(btn => btn.classList.remove('active'));
-    //         button.classList.add('active');
-    //         console.log(navLink);
-    //     })
-    // });
-
-
 }
 
 // Base URL for movie images
@@ -62,6 +46,13 @@ export function getParam(param) {
     const urlParams = new URLSearchParams(queryString); // Parse the query string
     return urlParams.get(param); // Return the value of the specified parameter
 }
+
+// Append query parameter cvalues to the URL
+export const appendParams = (url, params) => {
+    const queryString = new URLSearchParams(params).toString();
+    return `${url}?${queryString}`;
+};
+
 
 // retrieve data from localstorage
 export function getLocalStorage(key) {
@@ -120,55 +111,62 @@ export async function loadHeaderFooter() {
 // Respond to the favBtns to add movies to the localStorage
 export async function addToFavList() {
     const favBtns = document.querySelectorAll('.fav-btn');
-    console.log(favBtns);
+
     favBtns.forEach(favBtn => {
         favBtn.addEventListener('click', (e) => {
-            // alert(2);
-            // e.preventDefault();
-            // addToFavList(favBtn);
-            const j = favBtn.getAttribute('data-movieDetails');
-            // if (getLocalStorage('favoriteMovies') >= 0) {
+            const movieDetails = favBtn.getAttribute('data-movieDetails');
             const favs = getLocalStorage('favoriteMovies') || [];
-            console.log(favs);
-            if (!favs.includes(j)) {
-                favs.push(j);
-                console.log(favs);
-                showNotification('Movies added to Favourites')
+
+            if (!favs.includes(movieDetails)) {
+                favs.push(movieDetails);
+                showNotification('Movie added to Favorites');
             } else {
-                showNotification('Movies already added to Favourites')
+                showNotification('Movie already in Favorites');
             }
             setLocalStorage('favoriteMovies', favs);
         });
     });
 }
 
+// Sanitize HTML strings to prevent XSS
+function sanitizeHTML(str) {
+    const temp = document.createElement('div');
+    temp.textContent = str;
+    return temp.innerHTML;
+}
 
 // Generates and renders movie cards based on the provided data
-export function cardTemplateRev(data, selector) {
-    // console.log(typeof data);
-    selector.innerHTML = data.forEach(movie => {
-
-    });
+export function cardTemplate(data, selector) {
+    if (!Array.isArray(data)) {
+        console.error('Invalid data provided to cardTemplate');
+        return;
+    }
 
     selector.innerHTML = data.map((movie) => {
-        const parsedMovie = typeof movie === 'string' ? JSON.parse(movie) : movie;
-        return `<div class="movie-card">
-            <a href="/movie/?id=${parsedMovie.id}">
-                <img src="${IMAGE_BASE_URL}${parsedMovie.poster_path}"
-                alt="${parsedMovie.title ? parsedMovie.title : parsedMovie.name}"
+        const title = movie.title || movie.name || 'Unknown Title';
+        const posterPath = movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` :
+            `https://placehold.co/300x450?text=${encodeURIComponent(title)}`;
+        const rating = movie.vote_average !== undefined ? movie.vote_average.toFixed(1) : '';
+        const movieData = JSON.stringify(movie).replace(/'/g, '&#39;');
+
+        return `
+        <div class="movie-card">
+            <a href="/movie/?id=${movie.id}">
+                <img src="${sanitizeHTML(posterPath)}"
+                    alt="${sanitizeHTML(title)}"
                     class="movie-poster"
-                    onerror="this.src='https://placehold.co/300x450?text=${parsedMovie.title ? parsedMovie.title : parsedMovie.name}'">
+                    onerror="this.src='https://placehold.co/300x450?text=${encodeURIComponent(title)}'">
                 <div class="movie-info">
-                    <h3 class="movie-title">${parsedMovie.title ? parsedMovie.title : parsedMovie.name}</h3>
-                    <p class="movie-rating">⭐ ${parsedMovie.vote_average === undefined ? "" : parsedMovie.vote_average.toFixed(1)}</p>
+                    <h3 class="movie-title">${sanitizeHTML(title)}</h3>
+                    <p class="movie-rating">⭐ ${rating}</p>
                 </div>
             </a>
-            <button id="remFavBtn"
-                class="fav-btn" data-movieDetails='${JSON.stringify(movie).replaceAll(/'/g, '&#39;')}'>
-                <i class="fas fa-minus text-white text-sm"></i>
+            <button id="favBtn"
+                class="fav-btn" data-movieDetails='${movieData}'>
+                <i class="fas fa-plus text-white text-sm"></i>
             </button>
         </div>`;
-    }).join(''); // Map the data to HTML and join it into a single string
+    }).join('');
 }
 
 export function showNotification(message) {
@@ -176,27 +174,6 @@ export function showNotification(message) {
     notification.textContent = message;
     notification.classList.add('show');
     setTimeout(() => notification.classList.remove('show'), 3000);
-}
-
-// Generates and renders movie cards based on the provided data
-export function cardTemplate(data, selector) {
-    selector.innerHTML = data.map((movie) => `
-    <div class="movie-card">
-        <a href="/movie/?id=${movie.id}">
-            <img src="${IMAGE_BASE_URL}${movie.poster_path}"
-                alt="${movie.title ? movie.title : movie.name}"
-                class="movie-poster"
-                onerror="this.src='https://placehold.co/300x450?text=${movie.title ? movie.title : movie.name}'">
-            <div class="movie-info">
-                <h3 class="movie-title">${movie.title ? movie.title : movie.name}</h3>
-                <p class="movie-rating">⭐ ${movie.vote_average === undefined ? "" : movie.vote_average.toFixed(1)}</p>
-            </div>
-        </a>
-        <button id="favBtn"
-            class="fav-btn" data-movieDetails='${JSON.stringify(movie)}'>
-            <i class="fas fa-plus text-white text-sm"></i>
-        </button>
-    </div>`).join(''); // Map the data to HTML and join it into a single string
 }
 
 // To format currency
@@ -226,38 +203,58 @@ export const formatDate = (dateString) => {
 };
 
 // To paginate web pages with more content pages
-export function pagination(cP, tP, cST) {
-    // State management
-    let currentPage = cP || 1;
-    let totalPages = tP || 1;
-    let isSearching = false;
-    let currentSearchTerm = cST || '';
+export class Pagination {
+    constructor(currentPage = 1, totalPages = 1, currentSearchTerm = '', fetchMovies) {
+        this.currentPage = currentPage;
+        this.totalPages = totalPages;
+        this.currentSearchTerm = currentSearchTerm;
+        this.fetchMovies = fetchMovies;
+        this.isSearching = false;
 
-    const prevButton = document.getElementById('prevPage');
-    const nextButton = document.getElementById('nextPage');
-    const currentPageSpan = document.getElementById('currentPage');
+        this.prevButton = document.getElementById('prevPage');
+        this.nextButton = document.getElementById('nextPage');
+        this.currentPageSpan = document.getElementById('currentPage');
+    }
 
-    currentPageSpan.textContent = `Page ${currentPage} of ${totalPages}`;
-    prevButton.disabled = currentPage === 1;
-    nextButton.disabled = currentPage === totalPages;
+    init() {
+        this.updateUI();
+        this.addEventListeners();
+    }
 
-    // Pagination button handlers
-    document.getElementById('prevPage').addEventListener('click', () => {
-        if (currentPage > 1) {
-            const newPage = currentPage - 1;
-            isSearching ?
-                fetchSearchMovies(currentSearchTerm, newPage) :
-                fetchPopularMovies(newPage);
+    updateUI() {
+        if (!this.currentPageSpan || !this.prevButton || !this.nextButton) {
+            console.error('Pagination elements not found');
+            return;
         }
-    });
 
-    document.getElementById('nextPage').addEventListener('click', () => {
-        if (currentPage < totalPages) {
-            const newPage = currentPage + 1;
-            isSearching ?
-                fetchSearchMovies(currentSearchTerm, newPage) :
-                fetchPopularMovies(newPage);
+        this.currentPageSpan.textContent = `Page ${this.currentPage} of ${this.totalPages}`;
+        this.prevButton.disabled = this.currentPage === 1;
+        this.nextButton.disabled = this.currentPage === this.totalPages;
+    }
+
+    addEventListeners() {
+        if (!this.prevButton || !this.nextButton) {
+            console.error('Pagination buttons not found');
+            return;
         }
-    });
 
+        this.prevButton.addEventListener('click', () => this.goToPreviousPage());
+        this.nextButton.addEventListener('click', () => this.goToNextPage());
+    }
+
+    goToPreviousPage() {
+        if (this.currentPage > 1) {
+            const newPage = this.currentPage - 1;
+            this.currentPage = newPage;
+            this.fetchMovies(newPage);
+        }
+    }
+
+    goToNextPage() {
+        if (this.currentPage < this.totalPages) {
+            const newPage = this.currentPage + 1;
+            this.currentPage = newPage;
+            this.fetchMovies(newPage);
+        }
+    }
 }
